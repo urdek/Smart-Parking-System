@@ -1,0 +1,131 @@
+`timescale 1ns / 1ps
+module verilog1(
+
+// OTOPARK SWITCH
+    input wire switch0,// 1. switch
+    input wire switch1,// 2. switch
+    input wire switch2,// 3. switch
+    input wire switch3,// 4. switch
+
+ // REZERVE SWİTCH   
+    input wire R_switch0,// 1. rezerve switch
+    input wire R_switch1,// 2. rezerve switch
+    input wire R_switch2,// 3. rezerve switch
+    input wire R_switch3,// 4. rezerve switch     
+
+    output reg Y_led0,// 1. LED yeşil çıkışı
+    output reg Y_led1,// 2. LED yeşil çıkışı
+    output reg Y_led2,// 3. LED yeşil çıkışı
+    output reg Y_led3,// 4. LED yeşil çıkışı
+
+        output reg R_led0,// 1. LED kırmızı çıkışı
+    output reg R_led1,// 2. LED kırmızı çıkışı
+    output reg R_led2,// 3. LED kırmızı çıkışı
+    output reg R_led3,// 4. LED kırmızı çıkışı
+    
+    output reg S_led0,//1. sarı çıkışı
+    output reg S_led1,//2. sarı çıkışı
+    output reg S_led2,//3. sarı çıkışı
+    output reg S_led3,//4. sarı çıkışı
+    
+    //içeride olan araçsayısı ve yerleri
+    output reg KS_led0,//1, garaj
+    output reg KS_led1,//2. garaj
+    output reg KS_led2,//3. garaj
+    output reg KS_led3,//4. garaj
+    
+    //içeride boş olan yerler ve yerleri
+    output reg YS_led0,//1.garaj
+    output reg YS_led1,//2.garaj
+    output reg YS_led2,//3. garaj
+    output reg YS_led3,//4. garaj
+
+     
+    //REZERVE LED'LEDLERİN GÖSTERİM LEDLERİ
+    output reg Rez_led0,//1. rezerve LED
+    output reg Rez_led1,//2. rezerve LED
+    output reg Rez_led2,//3. rezerve LED
+    output reg Rez_led3,//4. rezerve LED
+    
+    input wire D_switch0,//Dışarı kapı switch DIŞARI
+    input wire D_switch1,//İçer kapı switch DIŞARI
+//=====================================>    
+    output reg D_Y_led0,//1. LED yeşil çıkışı DIŞARI
+    output reg D_Y_led1,//2. Led yeşil çıkışı DIŞARI 
+//=====================================>    
+    output reg D_R_led0,//1. LED kırmızı çıkışı DIŞARI
+    output reg D_R_led1//2. LED kırmızı çıkışı DIŞARI
+//=====================================>   
+    output reg M_led // MAVİ LED
+);
+
+    
+//Normal Garajların Çalışması
+    //GARAJ1
+    always@(switch0,switch1,switch2,switch3,R_switch0,R_switch1,
+R_switch2,R_switch3)begin
+
+    R_led0 = ((switch0 |switch0)& ~R_switch0);//Kırmızı LED (İÇERİDE)
+    Y_led0 = ~switch0 & ~R_switch0;// Yeşil LED (GARAJ BOŞ)
+    S_led0 = ~(~R_switch0);// Sarı LED (REZERVE)
+    
+    //GARAJ 2 İÇİN
+    R_led1 = ((switch1 |switch1)& ~R_switch1);//Kırmızı LED (İÇERİDE)
+    Y_led1 = ~switch1 & ~R_switch1;// Yeşil LED (GARAJ BOŞ)
+    S_led1 = ~(~R_switch1);// Sarı LED (REZERVE)
+
+     //GARAJ 3 İÇİN
+    R_led2 = ((switch2 |switch2)& ~R_switch2);//KIrmızı LED (ARABA İÇERİDE)
+    Y_led2 = ~switch2 & ~R_switch2;// Yeşil LED (GARAJ BOŞ)
+    S_led2 = ~(~R_switch2);// Sarı LED (REZERVE)
+    
+    //GARAJ 4 İÇİN
+    R_led3 = ((switch3 |switch3)& ~R_switch3);//KIrmızı LED (ARABA İÇERİDE)
+    Y_led3 = ~switch3 & ~R_switch3;// Yeşil LED (GARAJ BOŞ)
+    S_led3 = ~(~R_switch3);// Sarı LED (REZERVE)
+    
+    end
+    
+//DOLU BOŞ SAYISI VE YERLERİ GÖSTERİMİ
+    always@(R_led0,R_led1,R_led2,R_led3)begin
+    //DOLU YERLER
+    KS_led0 = R_led0;//(Kırmızı 1)
+    KS_led1 = R_led1;//(Kırmızı 2)
+    KS_led2 = R_led2;//(Kırmızı 3)
+    KS_led3 = R_led3;//(Kırmızı 4)
+    end
+    
+    //BOŞ YERLERİN SAYISI VE GÖSTERİMİ
+    always@(Y_led0,Y_led1,Y_led2,Y_led3)begin
+    YS_led0 = Y_led0;//(Yeşil 1)
+    YS_led1 = Y_led1;//(Yeşil 2)
+    YS_led2 = Y_led2;//(Yeşil 3)
+    YS_led3 = Y_led3;//(Yeşil 4)
+    end
+
+    //REZERVE YERLERİN SAYISI VE GÖSTERİMİ
+    always@(*)begin
+    Rez_led0 = S_led0;//(Sarı 1)
+    Rez_led1 = S_led1;//(Sarı 2)
+    Rez_led2 = S_led2;//(Sarı 3)
+    Rez_led3 = S_led3;//(Sarı 4)
+    end     
+    
+//DIŞ KAPI
+    //KAPI AÇIK İKEN(YEŞİL)                          
+    always@(D_switch0,D_switch1)begin
+    D_Y_led0 = ((D_switch0 | D_switch1) | (D_switch0 | D_switch1)); 
+    D_Y_led1 = ((D_switch0 | D_switch1) | (D_switch0 | D_switch1));
+    end  
+    //KAPI KAPALI İKEN(KIRMIZI)
+    always@(D_switch0,D_switch1)begin
+    D_R_led0 = ~((D_switch0 | D_switch1) | (D_switch0 | D_switch1));
+    D_R_led1 = ~((D_switch0 | D_switch1) | (D_switch0 | D_switch1));
+    end
+
+    // ELEKTRİKLİ ŞARJ
+    always@(E_switch)begin
+    M_led = E_switch;
+    end
+endmodule
+
